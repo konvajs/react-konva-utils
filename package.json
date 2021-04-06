@@ -1,0 +1,48 @@
+{
+  "name": "react-konva-utils",
+  "version": "0.1.0",
+  "description": "Useful components and hooks for react-konva",
+  "author": "Anton Lavrenov",
+  "keywords": [
+    "react",
+    "canvas",
+    "konva",
+    "react-konva"
+  ],
+  "dependencies": {
+    "konva": "^7.2.5",
+    "react-konva": "^17.0.2-0",
+    "use-image": "^1.0.7"
+  },
+  "peerDependencies": {
+    "react-dom": "^17.0.2",
+    "react": "^17.0.2"
+  },
+  "size-limit": [
+    {
+      "path": "./lib/polotno-app.js",
+      "limit": "395 KB"
+    }
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@storybook/addon-actions": "^6.2.2",
+    "@storybook/addon-essentials": "^6.2.2",
+    "@storybook/addon-links": "^6.2.2",
+    "@storybook/react": "^6.2.2",
+    "@types/react": "^17.0.3",
+    "babel-loader": "^8.2.2",
+    "parcel-bundler": "^1.12.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.2.3"
+  },
+  "scripts": {
+    "start": "npm run storybook",
+    "clean": "rm -rf ./lib",
+    "tsc": "tsc --outDir ./es --removeComments || echo \"tsc faild for some file(s).\"",
+    "build": "npm run clean && npm run tsc",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  }
+}

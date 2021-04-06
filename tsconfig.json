@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["es2015", "es2017", "dom"],
+    "target": "ES2015",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "module": "ES2020",
+    "allowJs": true,
+    "jsx": "react",
+    "strictNullChecks": true
+  },
+  "include": ["./src/*.ts", "./src/*.tsx"]
+}
