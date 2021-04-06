@@ -18,6 +18,11 @@
     "react-dom": "^17.0.2",
     "react": "^17.0.2"
   },
+  "module": "./es/index.js",
+  "files": [
+    "package.json",
+    "es"
+  ],
   "size-limit": [
     {
       "path": "./lib/polotno-app.js",
