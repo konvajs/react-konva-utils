@@ -7,9 +7,13 @@
 ```js
 import { Html } from 'react-konva-utils';
 
-<Group>
-  <Html><div>DOM content</Html>
-</Group>
+<Html
+  transform // should we apply position transform automatically to DOM container, default is true
+  groupProps={{}} // additional properties to the group wrapper, useful for some position offset
+  divProps={{}} // additional props for wrapped div elements, useful for styles
+>
+  <div>DOM content</div>
+</Html>;
 ```
 
 ### Portal
