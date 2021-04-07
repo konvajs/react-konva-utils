@@ -12,7 +12,7 @@ export default {
 
 export const PortalSt = () => (
   <Scene>
-    <Portal selector=".top" enabled>
+    <Portal selector=".top">
       <Rect width={100} height={100} fill="red" draggable />
     </Portal>
     <Rect width={100} height={100} fill="black" draggable />
