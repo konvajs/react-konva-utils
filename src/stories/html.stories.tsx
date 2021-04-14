@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rect, Group } from 'react-konva';
+import { Rect, Group, Transformer } from 'react-konva';
 
 import { Scene } from './Scene';
 import { Html } from '../html';
@@ -9,7 +9,7 @@ export default {
   component: Html,
 };
 
-export const HtmlSt = () => (
+export const Default = () => (
   <Scene>
     <Group draggable>
       <Rect width={100} height={100} fill="red" />
@@ -19,9 +19,9 @@ export const HtmlSt = () => (
     </Group>
   </Scene>
 );
-HtmlSt.storyName = 'Default';
+// HtmlSt.storyName = 'Default';
 
-export const HtmlStNoTransform = () => (
+export const NoAutoTransform = () => (
   <Scene>
     <Group draggable>
       <Rect width={100} height={100} fill="red" />
@@ -29,4 +29,22 @@ export const HtmlStNoTransform = () => (
     </Group>
   </Scene>
 );
-HtmlStNoTransform.storyName = 'No transform';
+// HtmlStNoTransform.storyName = 'No transform';
+
+export const Transforming = () => {
+  const groupRef = React.useRef();
+  const trRef = React.useRef();
+
+  React.useLayoutEffect(() => {
+    trRef.current.nodes([groupRef.current]);
+  });
+  return (
+    <Scene>
+      <Group draggable ref={groupRef} x={60} y={60}>
+        <Rect width={100} height={100} fill="red" />
+        <Html>Hello, world</Html>
+      </Group>
+      <Transformer ref={trRef} />
+    </Scene>
+  );
+};

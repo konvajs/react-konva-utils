@@ -3,6 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Group } from 'react-konva';
 
+const needForceStyle = (el: HTMLDivElement) => {
+  const pos = window.getComputedStyle(el).position;
+  const ok = pos === 'absolute' || pos === 'relative';
+  return !ok;
+};
+
 export const Html = ({ children, groupProps, divProps, transform }) => {
   const groupRef = React.useRef<Konva.Group>();
   const container = React.useRef<HTMLDivElement>();
@@ -24,8 +30,10 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     if (shouldTransform) {
       const tr = groupRef.current.getAbsoluteTransform();
       const attrs = tr.decompose();
-      div.style.top = attrs.y + 'px';
-      div.style.left = attrs.x + 'px';
+      div.style.top = '0px';
+      div.style.left = '0px';
+      div.style.transform = `translate(${attrs.x}px, ${attrs.y}px) rotate(${attrs.rotation}deg) scaleX(${attrs.scaleX}) scaleY(${attrs.scaleY})`;
+      div.style.transformOrigin = 'top left';
     }
   };
 
@@ -41,8 +49,11 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     let div = document.createElement('div');
     container.current = div;
     parent.appendChild(div);
-    parent.style.position = 'relative';
-    parent.style.position = 'relative';
+
+    if (shouldTransform && needForceStyle(parent)) {
+      parent.style.position = 'relative';
+    }
+
     group.on('_clearTransformCache', handleTransform);
     handleTransform();
     return () => {
