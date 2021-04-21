@@ -37,7 +37,7 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     }
   };
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const group = groupRef.current;
     if (!group) {
       return;
@@ -62,7 +62,7 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     };
   }, [shouldTransform]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     ReactDOM.render(children, container.current);
   });
 
