@@ -21,7 +21,7 @@ import { Html } from 'react-konva-utils';
 `Portal` allows you to create portal from one Konva container (such as `Layer` or `Group`) into another.
 
 ```js
-import { Html } from 'react-konva-utils';
+import { Portal } from 'react-konva-utils';
 
 <Layer>
   <Portal selector=".top">
