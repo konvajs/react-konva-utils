@@ -1,6 +1,6 @@
 {
   "name": "react-konva-utils",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Useful components and hooks for react-konva",
   "author": "Anton Lavrenov",
   "keywords": [
