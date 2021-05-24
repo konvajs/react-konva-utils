@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom';
 import { Group } from 'react-konva';
 
@@ -9,7 +9,13 @@ const needForceStyle = (el: HTMLDivElement) => {
   return !ok;
 };
 
-export const Html = ({ children, groupProps, divProps, transform }) => {
+type Props = PropsWithChildren<{
+  groupProps: Konva.ContainerConfig;
+  divProps: any;
+  transform?: boolean;
+}>;
+
+export const Html = ({ children, groupProps, divProps, transform }: Props) => {
   const groupRef = React.useRef<Konva.Group>();
   const container = React.useRef<HTMLDivElement>();
 
@@ -20,20 +26,28 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     if (!div) {
       return;
     }
-    div.style.position = 'absolute';
-    div.style.zIndex = '10';
+
     const { style, ...restProps } = divProps || {};
     // apply deep nesting, because direct assign of "divProps" will overwrite styles above
     Object.assign(div.style, style);
     Object.assign(div, restProps);
 
-    if (shouldTransform) {
+    if (shouldTransform && groupRef.current) {
       const tr = groupRef.current.getAbsoluteTransform();
       const attrs = tr.decompose();
+      div.style.position = 'absolute';
+      div.style.zIndex = '10';
       div.style.top = '0px';
       div.style.left = '0px';
       div.style.transform = `translate(${attrs.x}px, ${attrs.y}px) rotate(${attrs.rotation}deg) scaleX(${attrs.scaleX}) scaleY(${attrs.scaleY})`;
       div.style.transformOrigin = 'top left';
+    } else {
+      div.style.position = '';
+      div.style.zIndex = '';
+      div.style.top = '';
+      div.style.left = '';
+      div.style.transform = ``;
+      div.style.transformOrigin = '';
     }
   };
 
@@ -57,10 +71,15 @@ export const Html = ({ children, groupProps, divProps, transform }) => {
     group.on('_clearTransformCache', handleTransform);
     handleTransform();
     return () => {
+      group.off('_clearTransformCache', handleTransform);
       ReactDOM.unmountComponentAtNode(div);
       div.parentNode?.removeChild(div);
     };
   }, [shouldTransform]);
+
+  React.useLayoutEffect(() => {
+    handleTransform();
+  }, [divProps]);
 
   React.useLayoutEffect(() => {
     ReactDOM.render(children, container.current);

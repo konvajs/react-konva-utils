@@ -48,3 +48,39 @@ export const Transforming = () => {
     </Scene>
   );
 };
+
+export const ChangeProps = () => {
+  const [style, setStyle] = React.useState({});
+  const [transform, setTransform] = React.useState(false);
+
+  return (
+    <Scene>
+      <Group draggable x={60} y={60}>
+        <Rect width={100} height={100} fill="red" />
+        <Html transform={false}>
+          <button
+            onClick={() => {
+              if (style.border) {
+                setStyle({});
+              } else {
+                setStyle({ border: '1px solid black' });
+              }
+            }}
+          >
+            toggle style
+          </button>
+          <button
+            onClick={() => {
+              setTransform(!transform);
+            }}
+          >
+            toggle transform
+          </button>
+        </Html>
+        <Html divProps={{ style }} transform={transform}>
+          Hello, world
+        </Html>
+      </Group>
+    </Scene>
+  );
+};

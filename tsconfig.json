@@ -8,7 +8,9 @@
     "module": "ES2020",
     "allowJs": true,
     "jsx": "react",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "declaration": true,
+    "moduleResolution": "node"
   },
   "include": ["./src/*.ts", "./src/*.tsx"]
 }
