@@ -18,6 +18,7 @@
     "react-dom": "^17.0.2",
     "react": "^17.0.2"
   },
+  "types": "./es/index.d.ts",
   "module": "./es/index.js",
   "files": [
     "package.json",
