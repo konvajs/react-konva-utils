@@ -50,7 +50,7 @@ export const Transforming = () => {
 };
 
 export const ChangeProps = () => {
-  const [style, setStyle] = React.useState({});
+  const [style, setStyle] = React.useState({ border: '' });
   const [transform, setTransform] = React.useState(false);
 
   return (
@@ -61,7 +61,7 @@ export const ChangeProps = () => {
           <button
             onClick={() => {
               if (style.border) {
-                setStyle({});
+                setStyle({ border: '' });
               } else {
                 setStyle({ border: '1px solid black' });
               }

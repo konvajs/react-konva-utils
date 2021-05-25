@@ -10,13 +10,13 @@ const needForceStyle = (el: HTMLDivElement) => {
 };
 
 type Props = PropsWithChildren<{
-  groupProps: Konva.ContainerConfig;
-  divProps: any;
+  groupProps?: Konva.ContainerConfig;
+  divProps?: any;
   transform?: boolean;
 }>;
 
 export const Html = ({ children, groupProps, divProps, transform }: Props) => {
-  const groupRef = React.useRef<Konva.Group>();
+  const groupRef = React.useRef<Konva.Group>(null);
   const container = React.useRef<HTMLDivElement>();
 
   const shouldTransform = transform ?? true;
@@ -26,11 +26,6 @@ export const Html = ({ children, groupProps, divProps, transform }: Props) => {
     if (!div) {
       return;
     }
-
-    const { style, ...restProps } = divProps || {};
-    // apply deep nesting, because direct assign of "divProps" will overwrite styles above
-    Object.assign(div.style, style);
-    Object.assign(div, restProps);
 
     if (shouldTransform && groupRef.current) {
       const tr = groupRef.current.getAbsoluteTransform();
@@ -49,6 +44,10 @@ export const Html = ({ children, groupProps, divProps, transform }: Props) => {
       div.style.transform = ``;
       div.style.transformOrigin = '';
     }
+    const { style, ...restProps } = divProps || {};
+    // apply deep nesting, because direct assign of "divProps" will overwrite styles above
+    Object.assign(div.style, style);
+    Object.assign(div, restProps);
   };
 
   React.useLayoutEffect(() => {
