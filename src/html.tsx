@@ -67,10 +67,10 @@ export const Html = ({ children, groupProps, divProps, transform }: Props) => {
       parent.style.position = 'relative';
     }
 
-    group.on('_clearTransformCache', handleTransform);
+    group.on('absoluteTransformChange', handleTransform);
     handleTransform();
     return () => {
-      group.off('_clearTransformCache', handleTransform);
+      group.off('absoluteTransformChange', handleTransform);
       ReactDOM.unmountComponentAtNode(div);
       div.parentNode?.removeChild(div);
     };

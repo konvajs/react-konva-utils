@@ -10,13 +10,14 @@
     "react-konva"
   ],
   "dependencies": {
-    "react-konva": "^17.0.2-2",
+    "@storybook/core-server": "^6.3.0",
+    "react-konva": "^17.0.2-4",
     "use-image": "^1.0.7"
   },
   "peerDependencies": {
-    "konva": ">=7",
-    "react-dom": "^17.0.2",
-    "react": "^17.0.2"
+    "konva": "8.x",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "types": "./es/index.d.ts",
   "module": "./es/index.js",
@@ -35,6 +36,7 @@
     "@storybook/addon-actions": "^6.2.2",
     "@storybook/addon-essentials": "^6.2.2",
     "@storybook/addon-links": "^6.2.2",
+    "@storybook/core": "^6.3.0",
     "@storybook/react": "^6.2.2",
     "@types/react": "^17.0.3",
     "babel-loader": "^8.2.2",
