@@ -24,12 +24,6 @@
     "package.json",
     "es"
   ],
-  "size-limit": [
-    {
-      "path": "./lib/polotno-app.js",
-      "limit": "395 KB"
-    }
-  ],
   "devDependencies": {
     "@babel/core": "^7.13.14",
     "@storybook/addon-actions": "^6.2.2",

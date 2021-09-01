@@ -49,6 +49,27 @@ export const Transforming = () => {
   );
 };
 
+export const CalculatedTransforming = () => {
+  const groupRef = React.useRef();
+  const trRef = React.useRef();
+
+  React.useLayoutEffect(() => {
+    trRef.current.nodes([groupRef.current]);
+  });
+
+  return (
+    <Scene>
+      <Group draggable ref={groupRef} x={60} y={60}>
+        <Rect width={100} height={100} fill="red" />
+        <Html transformFunc={(attrs) => ({ ...attrs, rotation: 0 })}>
+          Hello, world
+        </Html>
+      </Group>
+      <Transformer ref={trRef} />
+    </Scene>
+  );
+};
+
 export const ChangeProps = () => {
   const [style, setStyle] = React.useState({ border: '' });
   const [transform, setTransform] = React.useState(false);
