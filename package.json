@@ -9,6 +9,7 @@
     "konva",
     "react-konva"
   ],
+  "license": "MIT",
   "dependencies": {
     "react-konva": "^17.0.2-4",
     "use-image": "^1.0.7"
