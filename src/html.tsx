@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import React, { PropsWithChildren } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
 
 const needForceStyle = (el: HTMLDivElement) => {
@@ -36,14 +36,12 @@ export const Html = ({
   const groupRef = React.useRef<Konva.Group>(null);
   const container = React.useRef<HTMLDivElement>();
 
+  const [div] = React.useState(() => document.createElement('div'));
+  const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
+
   const shouldTransform = transform ?? true;
 
   const handleTransform = () => {
-    const div = container.current;
-    if (!div) {
-      return;
-    }
-
     if (shouldTransform && groupRef.current) {
       const tr = groupRef.current.getAbsoluteTransform();
       let attrs = tr.decompose();
@@ -79,8 +77,6 @@ export const Html = ({
     if (!parent) {
       return;
     }
-    let div = document.createElement('div');
-    container.current = div;
     parent.appendChild(div);
 
     if (shouldTransform && needForceStyle(parent)) {
@@ -91,7 +87,6 @@ export const Html = ({
     handleTransform();
     return () => {
       group.off('absoluteTransformChange', handleTransform);
-      ReactDOM.unmountComponentAtNode(div);
       div.parentNode?.removeChild(div);
     };
   }, [shouldTransform]);
@@ -101,8 +96,14 @@ export const Html = ({
   }, [divProps]);
 
   React.useLayoutEffect(() => {
-    ReactDOM.render(children, container.current);
+    root.render(children);
   });
+
+  React.useEffect(() => {
+    return () => {
+      root.unmount();
+    };
+  }, []);
 
   return <Group ref={groupRef} {...groupProps} />;
 };
