@@ -3,10 +3,16 @@ import { Group, Text } from 'react-konva';
 
 import { TextEditor } from './text-editor';
 import Konva from 'konva';
+import { TextConfig } from 'konva/lib/shapes/Text';
 
-export const EditorSt = React.forwardRef(({ text, onChange, ...props }) => {
+interface EditorStProps extends TextConfig {
+  onChange: () => void;
+}
+
+export const EditorSt = React.forwardRef((props: EditorStProps) => {
+  const { text, onChange, ...rest } = props
   const [editorEnabled, setEditorEnabled] = React.useState(false);
-  const textRef = React.useRef<Konva.Text>();
+  const textRef = React.useRef<Konva.Text>(null);
 
   return (
     <Group draggable>
@@ -18,7 +24,7 @@ export const EditorSt = React.forwardRef(({ text, onChange, ...props }) => {
           setEditorEnabled(true);
         }}
         visible={!editorEnabled}
-        {...props}
+        {...rest}
       />
       {editorEnabled && (
         <Group>

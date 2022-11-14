@@ -24,10 +24,19 @@ export const Portal = ({ selector, enabled, children }) => {
     } else {
       inner.current.moveTo(outer.current);
     }
+
     // manually redraw layers
-    outer.current.getLayer().batchDraw();
+    const outerLayer = outer.current.getLayer();
+    
+    if (!outerLayer) return;
+
+    outerLayer.batchDraw();
     if (newContainer) {
-      newContainer.getLayer().batchDraw();
+      const newContainerLayer = newContainer.getLayer()
+    
+      if (!newContainerLayer) return
+    
+      newContainerLayer.batchDraw();
     }
   }, [selector, shouldMove]);
 
