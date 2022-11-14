@@ -99,7 +99,7 @@ export const Html = ({
     root.render(children);
   });
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     return () => {
       root.unmount();
     };
