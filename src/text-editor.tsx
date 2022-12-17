@@ -6,7 +6,6 @@ export const TextEditor = ({
   value,
   onBlur,
   onChange,
-  cursorPosition,
 }) => {
   const [style, setStyle] = React.useState<React.CSSProperties>();
   React.useLayoutEffect(() => {
