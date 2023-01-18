@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import React, { PropsWithChildren } from 'react';
+import React, {HTMLAttributes, PropsWithChildren} from 'react';
 import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
 
@@ -21,7 +21,7 @@ export type HtmlTransformAttrs = {
 
 export type HtmlProps = PropsWithChildren<{
   groupProps?: Konva.ContainerConfig;
-  divProps?: any;
+  divProps?: HTMLAttributes<HTMLDivElement>;
   transform?: boolean;
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
 }>;
