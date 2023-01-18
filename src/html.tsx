@@ -9,7 +9,7 @@ const needForceStyle = (el: HTMLDivElement) => {
   return !ok;
 };
 
-type TransformAttrs = {
+export type HtmlTransformAttrs = {
   x: number;
   y: number;
   scaleX: number;
@@ -19,11 +19,11 @@ type TransformAttrs = {
   skewY: number;
 };
 
-type Props = PropsWithChildren<{
+export type HtmlProps = PropsWithChildren<{
   groupProps?: Konva.ContainerConfig;
   divProps?: any;
   transform?: boolean;
-  transformFunc?: (attrs: TransformAttrs) => TransformAttrs;
+  transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
 }>;
 
 export const Html = ({
@@ -32,7 +32,7 @@ export const Html = ({
   divProps,
   transform,
   transformFunc,
-}: Props) => {
+}: HtmlProps) => {
   const groupRef = React.useRef<Konva.Group>(null);
   const container = React.useRef<HTMLDivElement>();
 
