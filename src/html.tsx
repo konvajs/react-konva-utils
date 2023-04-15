@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import React, {HTMLAttributes, PropsWithChildren} from 'react';
+import React, { HTMLAttributes, PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
 
@@ -101,7 +101,12 @@ export const Html = ({
 
   React.useLayoutEffect(() => {
     return () => {
-      root.unmount();
+      // I am not really sure why do we need timeout here
+      // but it resolve warnings from react
+      // ref: https://github.com/konvajs/react-konva-utils/issues/26
+      setTimeout(() => {
+        root.unmount();
+      });
     };
   }, []);
 
