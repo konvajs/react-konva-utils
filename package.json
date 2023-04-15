@@ -21,7 +21,7 @@
   },
   "types": "./es/index.d.ts",
   "module": "./es/index.js",
-  "type": "module",
+  "main": "./lib/index.js",
   "files": [
     "package.json",
     "es",
