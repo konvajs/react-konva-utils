@@ -21,9 +21,11 @@
   },
   "types": "./es/index.d.ts",
   "module": "./es/index.js",
+  "type": "module",
   "files": [
     "package.json",
-    "es"
+    "es",
+    "lib"
   ],
   "devDependencies": {
     "@babel/core": "^7.20.5",
@@ -44,7 +46,7 @@
   "scripts": {
     "start": "npm run storybook",
     "clean": "rm -rf ./lib",
-    "tsc": "tsc --outDir ./es --removeComments || echo \"tsc faild for some file(s).\"",
+    "tsc": "tsc --outDir ./es --removeComments && tsc -module commonjs -outDir ./lib",
     "build": "npm run clean && npm run tsc",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

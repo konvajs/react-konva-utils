@@ -3,3 +3,4 @@ node_modules
 .storybook
 es
 package-lock.json
+lib
