@@ -89,7 +89,7 @@ export const Html = ({
       group.off('absoluteTransformChange', handleTransform);
       div.parentNode?.removeChild(div);
     };
-  }, [shouldTransform]);
+  }, [shouldTransform, handleTransform]);
 
   React.useLayoutEffect(() => {
     handleTransform();
