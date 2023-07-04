@@ -26,6 +26,14 @@ export type HtmlProps = PropsWithChildren<{
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
 }>;
 
+export function useEvent(fn) {
+  const ref = React.useRef(null);
+  ref.current = fn;
+  return React.useCallback((...args) => {
+    return ref.current(...args);
+  }, []);
+}
+
 export const Html = ({
   children,
   groupProps,
@@ -41,7 +49,7 @@ export const Html = ({
 
   const shouldTransform = transform ?? true;
 
-  const handleTransform = () => {
+  const handleTransform = useEvent(() => {
     if (shouldTransform && groupRef.current) {
       const tr = groupRef.current.getAbsoluteTransform();
       let attrs = tr.decompose();
@@ -66,7 +74,7 @@ export const Html = ({
     // apply deep nesting, because direct assign of "divProps" will overwrite styles above
     Object.assign(div.style, style);
     Object.assign(div, restProps);
-  };
+  });
 
   React.useLayoutEffect(() => {
     const group = groupRef.current;
@@ -93,7 +101,7 @@ export const Html = ({
 
   React.useLayoutEffect(() => {
     handleTransform();
-  }, [divProps]);
+  }, [divProps, transformFunc]);
 
   React.useLayoutEffect(() => {
     root.render(children);
