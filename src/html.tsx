@@ -26,11 +26,11 @@ export type HtmlProps = PropsWithChildren<{
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
 }>;
 
-export function useEvent(fn) {
-  const ref = React.useRef(null);
+export function useEvent(fn = () => {}) {
+  const ref = React.useRef(fn);
   ref.current = fn;
   return React.useCallback((...args) => {
-    return ref.current(...args);
+    return ref.current.apply(null, args);
   }, []);
 }
 
