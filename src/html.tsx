@@ -19,7 +19,14 @@ export type HtmlTransformAttrs = {
   skewY: number;
 };
 
+const relevantProperties = [
+  "pointerEvents",
+  "userSelect",
+  "touchAction",
+] as const;
+
 export type HtmlProps = PropsWithChildren<{
+  inheritListen?: boolean;
   groupProps?: Konva.ContainerConfig;
   divProps?: HTMLAttributes<HTMLDivElement>;
   transform?: boolean;
@@ -36,6 +43,7 @@ export function useEvent(fn = () => {}) {
 
 export const Html = ({
   children,
+  inheritListen,
   groupProps,
   divProps,
   transform,
@@ -48,6 +56,42 @@ export const Html = ({
   const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
 
   const shouldTransform = transform ?? true;
+
+  const disable = React.useCallback(() => {
+    relevantProperties.forEach((property) => {
+      div.style[property] = "none";
+    });
+  }, []);
+
+  const restore = React.useCallback(() => {
+    div.style.pointerEvents = "auto";
+    return;
+  }, []);
+
+  React.useEffect(() => {
+    relevantProperties.forEach((property) => {
+      div.style[property] = "none";
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (inheritListen) {
+      const group = groupRef.current;
+
+      if (!group) {
+        return;
+      }
+
+      if (!group.isListening()) {
+        disable();
+        return;
+      }
+    }
+
+    if (inheritListen) {
+      restore();
+    }
+  }, [inheritListen, groupRef.current?.isListening()]);
 
   const handleTransform = useEvent(() => {
     if (shouldTransform && groupRef.current) {
