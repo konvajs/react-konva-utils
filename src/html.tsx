@@ -20,9 +20,9 @@ export type HtmlTransformAttrs = {
 };
 
 const relevantProperties = [
-  "pointerEvents",
-  "userSelect",
-  "touchAction",
+  'pointerEvents',
+  'userSelect',
+  'touchAction',
 ] as const;
 
 export type HtmlProps = PropsWithChildren<{
@@ -59,18 +59,18 @@ export const Html = ({
 
   const disable = React.useCallback(() => {
     relevantProperties.forEach((property) => {
-      div.style[property] = "none";
+      div.style[property] = 'none';
     });
   }, []);
 
   const restore = React.useCallback(() => {
-    div.style.pointerEvents = "auto";
+    div.style.pointerEvents = 'auto';
     return;
   }, []);
 
   React.useEffect(() => {
     relevantProperties.forEach((property) => {
-      div.style[property] = "none";
+      div.style[property] = 'none';
     });
   }, []);
 
