@@ -136,3 +136,26 @@ export const ChangeProps = () => {
     </Scene>
   );
 };
+
+const TestContext = React.createContext({ color: 'red' });
+
+const HtmlInternal = () => {
+  const data = React.useContext(TestContext);
+  return (
+    <div>
+      <div style={{ color: data.color }}>Hello, world, I should be green.</div>
+    </div>
+  );
+};
+
+export const PassContext = () => {
+  return (
+    <TestContext.Provider value={{ color: 'green' }}>
+      <Scene>
+        <Html>
+          <HtmlInternal />
+        </Html>
+      </Scene>
+    </TestContext.Provider>
+  );
+};

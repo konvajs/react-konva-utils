@@ -2,6 +2,7 @@ import Konva from 'konva';
 import React, { HTMLAttributes, PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
+import { useContextBridge, FiberProvider } from 'its-fine';
 
 const needForceStyle = (el: HTMLDivElement) => {
   const pos = window.getComputedStyle(el).position;
@@ -41,6 +42,7 @@ export const Html = ({
   transform,
   transformFunc,
 }: HtmlProps) => {
+  const Bridge = useContextBridge();
   const groupRef = React.useRef<Konva.Group>(null);
   const container = React.useRef<HTMLDivElement>();
 
@@ -104,7 +106,7 @@ export const Html = ({
   }, [divProps, transformFunc]);
 
   React.useLayoutEffect(() => {
-    root.render(children);
+    root.render(<Bridge>{children}</Bridge>);
   });
 
   React.useLayoutEffect(() => {

@@ -2,8 +2,14 @@ import Konva from 'konva';
 import React from 'react';
 import { Group } from 'react-konva';
 
+type PortalProps = {
+  selector: string;
+  enabled?: boolean;
+  children: React.ReactNode;
+};
+
 // make a portal implementation
-export const Portal = ({ selector, enabled, children }) => {
+export const Portal = ({ selector, enabled, children }: PortalProps) => {
   // "selector" is a string to find another container to insert all internals
   // if can be like ".top-layer" or "#overlay-group"
   const outer = React.useRef<Konva.Group>(null);
@@ -27,15 +33,15 @@ export const Portal = ({ selector, enabled, children }) => {
 
     // manually redraw layers
     const outerLayer = outer.current.getLayer();
-    
+
     if (!outerLayer) return;
 
     outerLayer.batchDraw();
     if (newContainer) {
-      const newContainerLayer = newContainer.getLayer()
-    
-      if (!newContainerLayer) return
-    
+      const newContainerLayer = newContainer.getLayer();
+
+      if (!newContainerLayer) return;
+
       newContainerLayer.batchDraw();
     }
   }, [selector, shouldMove]);
