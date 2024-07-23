@@ -20,7 +20,15 @@ export type HtmlTransformAttrs = {
   skewY: number;
 };
 
+const relevantProperties = [
+  'pointerEvents',
+  'userSelect',
+  'touchAction',
+] as const;
+
 export type HtmlProps = PropsWithChildren<{
+  inheritListen?: boolean;
+  selectors?: string | string[];
   groupProps?: Konva.ContainerConfig;
   divProps?: HTMLAttributes<HTMLDivElement>;
   transform?: boolean;
@@ -37,6 +45,8 @@ export function useEvent(fn = () => {}) {
 
 export const Html = ({
   children,
+  inheritListen,
+  selectors,
   groupProps,
   divProps,
   transform,
@@ -46,10 +56,76 @@ export const Html = ({
   const groupRef = React.useRef<Konva.Group>(null);
   const container = React.useRef<HTMLDivElement>();
 
+  const selector = React.useMemo(() => {
+    if (!selectors) {
+      return undefined;
+    }
+
+    return Array.isArray(selectors) ? selectors.join(',') : selectors;
+   }, [selectors]);
+
   const [div] = React.useState(() => document.createElement('div'));
   const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
 
   const shouldTransform = transform ?? true;
+
+  const disable = React.useCallback(() => {
+    relevantProperties.forEach((property) => {
+      div.style[property] = 'none';
+    });
+
+    if (!selector) {
+      return;
+    }
+
+    div.querySelectorAll(selector).forEach((el: HTMLElement) => {
+      relevantProperties.forEach((property) => {
+        el.style[property] = 'none';
+      });
+    });
+  }, [selector]);
+
+  const restore = React.useCallback(() => {
+    if (!selector) {
+      div.style.pointerEvents = 'auto';
+      return;
+    }
+
+    div.querySelectorAll(selector).forEach((el: HTMLElement) => {
+      relevantProperties.forEach((property) => {
+        el.style[property] = 'auto';
+      });
+    });
+  }, [selector]);
+
+  React.useEffect(() => {
+    if (!selector) {
+      return;
+    }
+
+    relevantProperties.forEach((property) => {
+      div.style[property] = 'none';
+    });
+  }, [selector]);
+
+  React.useEffect(() => {
+    if (inheritListen) {
+      const group = groupRef.current;
+
+      if (!group) {
+        return;
+      }
+
+      if (!group.isListening()) {
+        disable();
+        return;
+      }
+    }
+
+    if (inheritListen || selector) {
+      restore();
+    }
+  }, [inheritListen, groupRef.current?.isListening()]);
 
   const handleTransform = useEvent(() => {
     if (shouldTransform && groupRef.current) {
