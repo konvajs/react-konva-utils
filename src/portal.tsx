@@ -15,7 +15,7 @@ export const Portal = ({ selector, enabled, children }: PortalProps) => {
   const outer = React.useRef<Konva.Group>(null);
   const inner = React.useRef<Konva.Group>(null);
 
-  const safeRef = React.useRef<Konva.Group>();
+  const safeRef = React.useRef<Konva.Group>(null);
   const shouldMove = enabled ?? true;
 
   React.useLayoutEffect(() => {

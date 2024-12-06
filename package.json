@@ -11,13 +11,13 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "react-konva": "^18.0.0-0",
-    "use-image": "^1.1.0"
+    "react-konva": "^18.3.2 || ^19.0.1",
+    "use-image": "^1.1.1"
   },
   "peerDependencies": {
     "konva": "^8.3.5 || ^9.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "types": "./es/index.d.ts",
   "module": "./es/index.js",
@@ -28,27 +28,34 @@
     "lib"
   ],
   "devDependencies": {
-    "@babel/core": "^7.20.5",
-    "@storybook/addon-actions": "^6.5.14",
-    "@storybook/addon-essentials": "^6.5.14",
-    "@storybook/addon-links": "^6.5.14",
-    "@storybook/core": "^6.5.14",
-    "@storybook/core-server": "^6.5.14",
-    "@storybook/react": "^6.5.14",
-    "@types/react": "^18.0.26",
-    "babel-loader": "^9.1.0",
-    "html-webpack-plugin": "^5.5.0",
-    "parcel-bundler": "^1.12.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^4.9.4"
+    "@babel/core": "^7.26.0",
+    "@chromatic-com/storybook": "^3.2.2",
+    "@storybook/addon-actions": "^8.4.7",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/addon-links": "^8.4.7",
+    "@storybook/addon-onboarding": "^8.4.7",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/core": "^8.4.7",
+    "@storybook/core-server": "^8.4.7",
+    "@storybook/react": "^8.4.7",
+    "@storybook/react-vite": "^8.4.7",
+    "@storybook/test": "^8.4.7",
+    "@types/react": "^19.0.0",
+    "babel-loader": "^9.2.1",
+    "html-webpack-plugin": "^5.6.3",
+    "parcel-bundler": "^1.12.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "storybook": "^8.4.7",
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "start": "npm run storybook",
     "clean": "rm -rf ./lib",
     "tsc": "tsc --outDir ./es --removeComments && tsc -module commonjs -outDir ./lib",
     "build": "npm run clean && npm run tsc",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   }
 }

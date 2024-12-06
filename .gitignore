@@ -1,6 +1,6 @@
 node_modules
 .cache
-.storybook
 es
 package-lock.json
 lib
+*storybook.log

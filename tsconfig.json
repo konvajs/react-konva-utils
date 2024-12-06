@@ -10,7 +10,8 @@
     "jsx": "react",
     "strictNullChecks": true,
     "declaration": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "skipLibCheck": true
   },
   "include": ["./src/*.ts", "./src/*.tsx"]
 }

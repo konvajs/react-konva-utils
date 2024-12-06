@@ -44,7 +44,6 @@ export const Html = ({
 }: HtmlProps) => {
   const Bridge = useContextBridge();
   const groupRef = React.useRef<Konva.Group>(null);
-  const container = React.useRef<HTMLDivElement>();
 
   const [div] = React.useState(() => document.createElement('div'));
   const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
