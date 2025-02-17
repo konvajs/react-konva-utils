@@ -12,6 +12,7 @@ import { Html } from 'react-konva-utils';
   transformFunc={(transformAttrs) => newAttrs} // function to overwrite transformation attributes, not used if transform = false, default is undefined
   groupProps={{}} // additional properties to the group wrapper, useful for some position offset
   divProps={{}} // additional props for wrapped div elements, useful for styles
+  parentNodeFunc={(args) => args.stage?.container()} // function to find parent node to insert content, default is stage container
 >
   <div>DOM content</div>
 </Html>;

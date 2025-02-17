@@ -25,6 +25,7 @@ export type HtmlProps = PropsWithChildren<{
   divProps?: HTMLAttributes<HTMLDivElement>;
   transform?: boolean;
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
+  parentNodeFunc?: (args: { stage: Konva.Stage | null }) => HTMLDivElement;
 }>;
 
 export function useEvent(fn = () => {}) {
@@ -41,6 +42,7 @@ export const Html = ({
   divProps,
   transform,
   transformFunc,
+  parentNodeFunc,
 }: HtmlProps) => {
   const Bridge = useContextBridge();
   const groupRef = React.useRef<Konva.Group>(null);
@@ -82,7 +84,9 @@ export const Html = ({
     if (!group) {
       return;
     }
-    const parent = group.getStage()?.container();
+    const parent = parentNodeFunc
+      ? parentNodeFunc({ stage: group.getStage() })
+      : group.getStage()?.container();
     if (!parent) {
       return;
     }
@@ -98,7 +102,7 @@ export const Html = ({
       group.off('absoluteTransformChange', handleTransform);
       div.parentNode?.removeChild(div);
     };
-  }, [shouldTransform]);
+  }, [shouldTransform, parentNodeFunc]);
 
   React.useLayoutEffect(() => {
     handleTransform();
