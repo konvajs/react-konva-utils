@@ -3,6 +3,7 @@ import React, { HTMLAttributes, PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
 import { useContextBridge, FiberProvider } from 'its-fine';
+import { flushSync } from 'react-dom';
 
 const needForceStyle = (el: HTMLDivElement) => {
   const pos = window.getComputedStyle(el).position;
@@ -109,7 +110,17 @@ export const Html = ({
   }, [divProps, transformFunc]);
 
   React.useLayoutEffect(() => {
-    root.render(<Bridge>{children}</Bridge>);
+    // Run *after* React’s commit but *before* the next paint
+    // ideally we should just call root.render here with a sync mode
+    // TODO: does React 19 support sync mode?
+    // but react doing re-render in async mode
+    // in some scenarios we want to see result instantly,
+    // so it is in sync with Konva stage
+    queueMicrotask(() => {
+      flushSync(() => {
+        root.render(<Bridge>{children}</Bridge>);
+      });
+    });
   });
 
   React.useLayoutEffect(() => {
