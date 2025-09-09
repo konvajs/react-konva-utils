@@ -2,7 +2,7 @@ import Konva from 'konva';
 import React, { HTMLAttributes, PropsWithChildren } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Group } from 'react-konva';
-import { useContextBridge } from 'its-fine';
+import { useContextBridge } from 'react-konva';
 import { flushSync } from 'react-dom';
 
 const needForceStyle = (el: HTMLDivElement) => {
