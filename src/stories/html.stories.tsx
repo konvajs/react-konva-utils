@@ -162,11 +162,12 @@ export const PassContext = () => {
 
 export const TwoLayersWithTween = () => {
 	const topLayerRef = React.useRef<Konva.Layer>(null);
-	const [isVisible, setIsVisible] = React.useState(true);
+	const [isOpacityVisible, setIsOpacityVisible] = React.useState(true);
+	const [isVisibilityVisible, setIsVisibilityVisible] = React.useState(true);
 
 	const toggleOpacity = () => {
 		if (topLayerRef.current) {
-			const targetOpacity = isVisible ? 0 : 1;
+			const targetOpacity = isOpacityVisible ? 0 : 1;
 
 			new Konva.Tween({
 				node: topLayerRef.current,
@@ -174,7 +175,15 @@ export const TwoLayersWithTween = () => {
 				opacity: targetOpacity,
 			}).play();
 
-			setIsVisible(!isVisible);
+			setIsOpacityVisible(!isOpacityVisible);
+		}
+	};
+
+	const toggleVisibility = () => {
+		if (topLayerRef.current) {
+			const newVisibility = !isVisibilityVisible;
+			topLayerRef.current.visible(newVisibility);
+			setIsVisibilityVisible(newVisibility);
 		}
 	};
 
@@ -185,11 +194,23 @@ export const TwoLayersWithTween = () => {
 				onClick={toggleOpacity}
 				style={{
 					marginBottom: "10px",
+					marginRight: "10px",
 					padding: "8px 16px",
 					cursor: "pointer",
 				}}
 			>
-				Toggle Top Layer Opacity
+				Toggle Top Layer Opacity (Tween)
+			</button>
+			<button
+				type="button"
+				onClick={toggleVisibility}
+				style={{
+					marginBottom: "10px",
+					padding: "8px 16px",
+					cursor: "pointer",
+				}}
+			>
+				Toggle Top Layer Visibility
 			</button>
 			<Stage width={500} height={400}>
 				<Layer>
