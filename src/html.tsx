@@ -80,6 +80,13 @@ export const Html = ({
     Object.assign(div, restProps);
   });
 
+  const handleOpacityChange = useEvent(() => {
+    if (groupRef.current) {
+      const opacity = groupRef.current.getAbsoluteOpacity();
+      div.style.opacity = opacity.toString();
+    }
+  });
+
   React.useLayoutEffect(() => {
     const group = groupRef.current;
     if (!group) {
@@ -99,8 +106,27 @@ export const Html = ({
 
     group.on('absoluteTransformChange', handleTransform);
     handleTransform();
+
+    // Listen for opacity changes on the group and all ancestors
+    const listenToOpacity = (node: Konva.Node | null) => {
+      if (!node) return;
+      node.on('opacityChange', handleOpacityChange);
+      listenToOpacity(node.getParent());
+    };
+    listenToOpacity(group);
+    handleOpacityChange();
+
     return () => {
       group.off('absoluteTransformChange', handleTransform);
+
+      // Remove opacity listeners
+      const removeOpacityListeners = (node: Konva.Node | null) => {
+        if (!node) return;
+        node.off('opacityChange', handleOpacityChange);
+        removeOpacityListeners(node.getParent());
+      };
+      removeOpacityListeners(group);
+
       div.parentNode?.removeChild(div);
     };
   }, [shouldTransform, parentNodeFunc]);
