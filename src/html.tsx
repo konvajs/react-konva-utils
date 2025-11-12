@@ -87,6 +87,13 @@ export const Html = ({
     }
   });
 
+  const handleVisibilityChange = useEvent(() => {
+    if (groupRef.current) {
+      const isVisible = groupRef.current.isVisible();
+      div.style.display = isVisible ? '' : 'none';
+    }
+  });
+
   React.useLayoutEffect(() => {
     const group = groupRef.current;
     if (!group) {
@@ -116,6 +123,15 @@ export const Html = ({
     listenToOpacity(group);
     handleOpacityChange();
 
+    // Listen for visibility changes on the group and all ancestors
+    const listenToVisibility = (node: Konva.Node | null) => {
+      if (!node) return;
+      node.on('visibleChange', handleVisibilityChange);
+      listenToVisibility(node.getParent());
+    };
+    listenToVisibility(group);
+    handleVisibilityChange();
+
     return () => {
       group.off('absoluteTransformChange', handleTransform);
 
@@ -126,6 +142,14 @@ export const Html = ({
         removeOpacityListeners(node.getParent());
       };
       removeOpacityListeners(group);
+
+      // Remove visibility listeners
+      const removeVisibilityListeners = (node: Konva.Node | null) => {
+        if (!node) return;
+        node.off('visibleChange', handleVisibilityChange);
+        removeVisibilityListeners(node.getParent());
+      };
+      removeVisibilityListeners(group);
 
       div.parentNode?.removeChild(div);
     };
