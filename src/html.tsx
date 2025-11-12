@@ -25,6 +25,10 @@ export type HtmlProps = PropsWithChildren<{
   groupProps?: Konva.ContainerConfig;
   divProps?: HTMLAttributes<HTMLDivElement>;
   transform?: boolean;
+  /** When true, the HTML dom will adjust its opacity to match the opacity of parent Konva Elements */
+  deriveOpacity?: boolean;
+  /** When true, the HTML dom will adjust its visibility to match the opacity of parent Konva Elements */
+  deriveVisibility?: boolean;
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
   parentNodeFunc?: (args: { stage: Konva.Stage | null }) => HTMLDivElement;
 }>;
@@ -42,6 +46,8 @@ export const Html = ({
   groupProps,
   divProps,
   transform,
+  deriveOpacity,
+  deriveVisibility,
   transformFunc,
   parentNodeFunc,
 }: HtmlProps) => {
@@ -52,6 +58,10 @@ export const Html = ({
   const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
 
   const shouldTransform = transform ?? true;
+  // Following properties are false by default to avoid breaking current default behavior
+  // In a major release this should probably default to 'true'
+  const shouldDeriveOpaciy = deriveOpacity ?? false;
+  const shouldDeriveVisibility = deriveVisibility ?? false;
 
   const handleTransform = useEvent(() => {
     if (shouldTransform && groupRef.current) {
@@ -114,46 +124,54 @@ export const Html = ({
     group.on('absoluteTransformChange', handleTransform);
     handleTransform();
 
-    // Listen for opacity changes on the group and all ancestors
-    const listenToOpacity = (node: Konva.Node | null) => {
-      if (!node) return;
-      node.on('opacityChange', handleOpacityChange);
-      listenToOpacity(node.getParent());
-    };
-    listenToOpacity(group);
-    handleOpacityChange();
+    if (shouldDeriveOpaciy) {
+      // Listen for opacity changes on the group and all ancestors (recursive)
+      const listenToOpacity = (node: Konva.Node | null) => {
+        if (!node) return;
+        node.on('opacityChange', handleOpacityChange);
+        listenToOpacity(node.getParent());
+      };
+      listenToOpacity(group);
+      handleOpacityChange();
+    }
 
-    // Listen for visibility changes on the group and all ancestors
-    const listenToVisibility = (node: Konva.Node | null) => {
-      if (!node) return;
-      node.on('visibleChange', handleVisibilityChange);
-      listenToVisibility(node.getParent());
-    };
-    listenToVisibility(group);
-    handleVisibilityChange();
-
+    if (shouldDeriveVisibility) {
+      // Listen for visibility changes on the group and all ancestors (recursive)
+      const listenToVisibility = (node: Konva.Node | null) => {
+        if (!node) return;
+        node.on('visibleChange', handleVisibilityChange);
+        listenToVisibility(node.getParent());
+      };
+      listenToVisibility(group);
+      handleVisibilityChange();
+    }
+    
     return () => {
       group.off('absoluteTransformChange', handleTransform);
 
-      // Remove opacity listeners
-      const removeOpacityListeners = (node: Konva.Node | null) => {
-        if (!node) return;
-        node.off('opacityChange', handleOpacityChange);
-        removeOpacityListeners(node.getParent());
-      };
-      removeOpacityListeners(group);
+      // Remove opacity listeners from node and all ancestors
+      if (shouldDeriveOpaciy) {
+        const removeOpacityListeners = (node: Konva.Node | null) => {
+          if (!node) return;
+          node.off('opacityChange', handleOpacityChange);
+          removeOpacityListeners(node.getParent());
+        };
+        removeOpacityListeners(group);
+      }
 
-      // Remove visibility listeners
-      const removeVisibilityListeners = (node: Konva.Node | null) => {
-        if (!node) return;
-        node.off('visibleChange', handleVisibilityChange);
-        removeVisibilityListeners(node.getParent());
-      };
-      removeVisibilityListeners(group);
+      if (shouldDeriveVisibility) {
+        // Remove visibility listeners from node and all ancestors
+        const removeVisibilityListeners = (node: Konva.Node | null) => {
+          if (!node) return;
+          node.off('visibleChange', handleVisibilityChange);
+          removeVisibilityListeners(node.getParent());
+        };
+        removeVisibilityListeners(group);
+      }
 
       div.parentNode?.removeChild(div);
     };
-  }, [shouldTransform, parentNodeFunc]);
+  }, [shouldTransform, shouldDeriveOpaciy, shouldDeriveVisibility, parentNodeFunc]);
 
   React.useLayoutEffect(() => {
     handleTransform();
