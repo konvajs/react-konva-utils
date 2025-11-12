@@ -160,10 +160,12 @@ export const PassContext = () => {
 	);
 };
 
-export const TwoLayersWithTween = () => {
+export const VisibilityAndOpacityChanges = () => {
 	const topLayerRef = React.useRef<Konva.Layer>(null);
 	const [isOpacityVisible, setIsOpacityVisible] = React.useState(true);
 	const [isVisibilityVisible, setIsVisibilityVisible] = React.useState(true);
+	const [deriveOpacity, setDeriveOpacity] = React.useState(false);
+	const [deriveVisibility, setDeriveVisibility] = React.useState(false);
 
 	const toggleOpacity = () => {
 		if (topLayerRef.current) {
@@ -189,34 +191,14 @@ export const TwoLayersWithTween = () => {
 
 	return (
 		<div>
-			<button
-				type="button"
-				onClick={toggleOpacity}
-				style={{
-					marginBottom: "10px",
-					marginRight: "10px",
-					padding: "8px 16px",
-					cursor: "pointer",
-				}}
-			>
-				Toggle Top Layer Opacity (Tween)
-			</button>
-			<button
-				type="button"
-				onClick={toggleVisibility}
-				style={{
-					marginBottom: "10px",
-					padding: "8px 16px",
-					cursor: "pointer",
-				}}
-			>
-				Toggle Top Layer Visibility
-			</button>
 			<Stage width={500} height={400}>
 				<Layer>
 					<Group x={50} y={50}>
 						<Rect width={150} height={150} fill="blue" />
-						<Html>
+						<Html
+							deriveOpacity={deriveOpacity}
+							deriveVisibility={deriveVisibility}
+						>
 							<div
 								style={{
 									padding: "10px",
@@ -233,7 +215,10 @@ export const TwoLayersWithTween = () => {
 				<Layer ref={topLayerRef}>
 					<Group x={100} y={100}>
 						<Rect width={150} height={150} fill="red" />
-						<Html>
+						<Html
+							deriveOpacity={deriveOpacity}
+							deriveVisibility={deriveVisibility}
+						>
 							<div
 								style={{
 									padding: "10px",
@@ -248,6 +233,40 @@ export const TwoLayersWithTween = () => {
 					</Group>
 				</Layer>
 			</Stage>
+
+			<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+				<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+					<label>
+						<input
+							type="checkbox"
+							checked={deriveOpacity}
+							onChange={(e) => setDeriveOpacity(e.target.checked)}
+						/>
+						Auto adjust opacity{" "}
+						<code>(deriveOpacity = {deriveOpacity ? "true" : "false"})</code>
+					</label>
+					<button type="button" onClick={toggleOpacity}>
+						Toggle Top Layer Opacity (Tween)
+					</button>
+				</div>
+
+				<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+					<label>
+						<input
+							type="checkbox"
+							checked={deriveVisibility}
+							onChange={(e) => setDeriveVisibility(e.target.checked)}
+						/>
+						Auto Adjust visibility{" "}
+						<code>
+							(deriveVisibility = {deriveVisibility ? "true" : "false"})
+						</code>
+					</label>
+					<button type="button" onClick={toggleVisibility}>
+						Toggle Top Layer Visibility
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 };
