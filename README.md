@@ -10,6 +10,8 @@ import { Html } from 'react-konva-utils';
 <Html
   transform // should we apply position transform automatically to DOM container, default is true
   transformFunc={(transformAttrs) => newAttrs} // function to overwrite transformation attributes, not used if transform = false, default is undefined
+  deriveOpacity // when true, HTML dom will adjust opacity to match parent Konva elements, default is false
+  deriveVisibility // when true, HTML dom will adjust visibility to match parent Konva elements, default is false
   groupProps={{}} // additional properties to the group wrapper, useful for some position offset
   divProps={{}} // additional props for wrapped div elements, useful for styles
   parentNodeFunc={(args) => args.stage?.container()} // function to find parent node to insert content, default is stage container
