@@ -49,7 +49,7 @@ export const Html = ({
   const groupRef = React.useRef<Konva.Group>(null);
 
   const [div] = React.useState(() => document.createElement('div'));
-  const root = React.useMemo(() => ReactDOM.createRoot(div), [div]);
+  const rootRef = React.useRef<ReactDOM.Root | null>(null);
 
   const shouldTransform = transform ?? true;
 
@@ -110,27 +110,31 @@ export const Html = ({
   }, [divProps, transformFunc]);
 
   React.useLayoutEffect(() => {
-    // Run *after* React’s commit but *before* the next paint
-    // ideally we should just call root.render here with a sync mode
-    // TODO: does React 19 support sync mode?
-    // but react doing re-render in async mode
-    // in some scenarios we want to see result instantly,
-    // so it is in sync with Konva stage
+    let cancelled = false;
+    // Render outside the Konva commit, but before the next paint.
     queueMicrotask(() => {
+      if (cancelled) {
+        return;
+      }
       flushSync(() => {
+        const root = (rootRef.current ??= ReactDOM.createRoot(div));
         root.render(<Bridge>{children}</Bridge>);
       });
     });
+    return () => {
+      cancelled = true;
+    };
   });
 
   React.useLayoutEffect(() => {
     return () => {
-      // I am not really sure why do we need timeout here
-      // but it resolve warnings from react
-      // ref: https://github.com/konvajs/react-konva-utils/issues/26
-      setTimeout(() => {
-        root.unmount();
-      });
+      const root = rootRef.current;
+      rootRef.current = null;
+      // React cannot unmount another root during a commit. Dispose this root
+      // before a reconnect's queued render creates its replacement.
+      if (root) {
+        queueMicrotask(() => root.unmount());
+      }
     };
   }, []);
 

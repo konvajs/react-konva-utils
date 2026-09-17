@@ -20,9 +20,11 @@ import { Html } from 'react-konva-utils';
 
 ### How does it work?
 
-Konva is a canvas library. It can't render DOM elements directly. `<Html>` component will just create a div element and put it top top of the canvas with absolute positioning. That means HTML will be not visible if you export canvas as image.
+Konva is a canvas library. It can't render DOM elements directly. `<Html>` creates an absolutely positioned div over the canvas. The HTML content is not included when you export the canvas as an image.
 
 The most common use case is to create HTML content for temporary tooltips or textareas.
+
+`Html` renders its children in a separate React DOM root. Activity or Suspense hiding disposes that root and recreates the content on reveal. Keep state that must survive hiding outside the hidden subtree.
 
 ## Portal
 
@@ -40,3 +42,16 @@ import { Portal } from 'react-konva-utils';
   <Group name="top" />
 </Layer>;
 ```
+
+## Development
+
+Install dependencies and Chromium before running the browser tests:
+
+```sh
+npm install
+npx playwright install chromium
+npm test
+npm run build
+```
+
+`npm test` runs the browser tests with development and production React, then checks the test types. The tests use the actual `Html` and `Stage` components.
