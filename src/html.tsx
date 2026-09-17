@@ -27,7 +27,7 @@ export type HtmlProps = PropsWithChildren<{
   transform?: boolean;
   /** When true, the HTML dom will adjust its opacity to match the opacity of parent Konva Elements */
   deriveOpacity?: boolean;
-  /** When true, the HTML dom will adjust its visibility to match the opacity of parent Konva Elements */
+  /** When true, the HTML dom will adjust its visibility to match the visibility of parent Konva Elements */
   deriveVisibility?: boolean;
   transformFunc?: (attrs: HtmlTransformAttrs) => HtmlTransformAttrs;
   parentNodeFunc?: (args: { stage: Konva.Stage | null }) => HTMLDivElement;
@@ -157,6 +157,7 @@ export const Html = ({
           removeOpacityListeners(node.getParent());
         };
         removeOpacityListeners(group);
+        div.style.opacity = '';
       }
 
       if (shouldDeriveVisibility) {
@@ -167,6 +168,7 @@ export const Html = ({
           removeVisibilityListeners(node.getParent());
         };
         removeVisibilityListeners(group);
+        div.style.display = '';
       }
 
       div.parentNode?.removeChild(div);

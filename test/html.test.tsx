@@ -315,3 +315,61 @@ it('switches an editor between canvas transforms and normal layout without losin
   await editor.fill('Edited after toggling');
   expect(host.current!.querySelector('output')?.textContent).toBe('Edited after toggling');
 });
+
+it.each([undefined, true])('follows ancestor opacity and visibility only when enabled (%s)', async (derive) => {
+  const layer = React.createRef<Konva.Layer>();
+  const group = React.createRef<Konva.Group>();
+  render(
+    <Stage width={100} height={100}>
+      <Layer ref={layer} opacity={0.5}>
+        <Group ref={group} opacity={0.4}>
+          <Html deriveOpacity={derive} deriveVisibility={derive} divProps={{ id: 'overlay' }}>
+            <span>Overlay</span>
+          </Html>
+        </Group>
+      </Layer>
+    </Stage>
+  );
+  await settle();
+  const overlay = container.querySelector<HTMLElement>('#overlay')!;
+  expect(getComputedStyle(overlay).opacity).toBe(derive ? '0.2' : '1');
+
+  group.current!.opacity(0.2);
+  expect(getComputedStyle(overlay).opacity).toBe(derive ? '0.1' : '1');
+
+  layer.current!.visible(false);
+  expect(overlay.getClientRects()).toHaveLength(derive ? 0 : 1);
+
+  group.current!.opacity(0.8);
+  layer.current!.visible(true);
+  expect(overlay.getClientRects()).toHaveLength(1);
+  expect(getComputedStyle(overlay).opacity).toBe(derive ? '0.4' : '1');
+});
+
+it('restores normal DOM appearance when deriving opacity and visibility is disabled', async () => {
+  const view = (derive: boolean) => (
+    <Scene>
+      <Group opacity={0.25} visible={false}>
+        <Html deriveOpacity={derive} deriveVisibility={derive} divProps={{ id: 'overlay' }}>
+          <span>Overlay</span>
+        </Html>
+      </Group>
+    </Scene>
+  );
+
+  render(view(true));
+  await settle();
+  const overlay = container.querySelector<HTMLElement>('#overlay')!;
+  expect(getComputedStyle(overlay).opacity).toBe('0.25');
+  expect(overlay.getClientRects()).toHaveLength(0);
+
+  render(view(false));
+  await settle();
+  expect(getComputedStyle(overlay).opacity).toBe('1');
+  expect(overlay.getClientRects()).toHaveLength(1);
+
+  render(view(true));
+  await settle();
+  expect(getComputedStyle(overlay).opacity).toBe('0.25');
+  expect(overlay.getClientRects()).toHaveLength(0);
+});
